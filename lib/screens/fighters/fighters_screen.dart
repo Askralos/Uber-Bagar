@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:uberbagar/models/fighter.dart';
 import 'package:uberbagar/screens/fighters/widgets/fighter_card.dart';
 import 'package:uberbagar/services/supabase_service.dart';
 
+import '../../providers/fighters_provider.dart';
 import '../add_fighters/add_fighters_screen.dart';
 import '../fighters_details/fighter_details_screen.dart';
 
@@ -57,8 +59,15 @@ class _FightersScreenState extends State<FightersScreen> {
   }
 
 
+
   @override
   Widget build(BuildContext context) {
+    // Accès au provider
+    final fightersProvider = Provider.of<FightersProvider>(context);
+    final fighters = fightersProvider.fighters;
+    final isLoading = fightersProvider.isLoading;
+    final selectedCategory = fightersProvider.selectedCategory;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Combattants'),
@@ -73,12 +82,12 @@ class _FightersScreenState extends State<FightersScreen> {
               );
             },
           ),
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: () {
-              _loadFighters();  // Appel de la méthode de chargement des combattants
-            },
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.refresh),
+          //   onPressed: () {
+          //     fightersProvider.fetchFighters();  // Utilisation du provider pour recharger
+          //   },
+          // ),
         ],
       ),
       body: Column(
@@ -94,12 +103,9 @@ class _FightersScreenState extends State<FightersScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
                     child: FilterChip(
                       label: Text(category),
-                      selected: _selectedCategory == category,
+                      selected: selectedCategory == category,
                       onSelected: (selected) {
-                        setState(() {
-                          _selectedCategory = category;
-                          _loadFighters();
-                        });
+                        fightersProvider.setCategory(category);  // Utilisation du provider
                       },
                       selectedColor: Colors.red.shade100,
                       checkmarkColor: Colors.red,
@@ -110,18 +116,20 @@ class _FightersScreenState extends State<FightersScreen> {
             ),
           ),
           Expanded(
-            child: _isLoading
+            child: isLoading
+                ? Center(child: CircularProgressIndicator())
+                : fighters.isEmpty
                 ? Center(child: Text('Aucun combattant trouvé'))
                 : ListView.builder(
-              itemCount: _fighters.length,
+              itemCount: fighters.length,
               itemBuilder: (context, index) {
                 return FighterCard(
-                  fighter: _fighters[index],
+                  fighter: fighters[index],
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                        builder: (context) => FighterDetailsScreen(fighter: _fighters[index])),
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FighterDetailsScreen(fighter: fighters[index])),
                     );
                   },
                 );
@@ -130,7 +138,6 @@ class _FightersScreenState extends State<FightersScreen> {
           ),
         ],
       ),
-    );
-  }
+    );}
 }
 

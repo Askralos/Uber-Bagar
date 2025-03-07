@@ -59,5 +59,13 @@ class SupabaseService {
       rethrow;
     }
   }
+
+  Future<List<Fighter>> getFighterLocations() async {
+    final response = await supabase
+        .from('fighters')
+        .select('id, firstName, lastName, longitude, latitude');
+
+    return response.map((json) => Fighter.fromJson(json)).toList();
+  }
 }
 

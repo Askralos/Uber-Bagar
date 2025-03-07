@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uberbagar/providers/fighters_provider.dart';
 import 'package:uberbagar/screens/home/home_screen.dart';
 import 'package:uberbagar/screens/fighters/fighters_screen.dart';
 import 'package:uberbagar/screens/profile/profile_screen.dart';
@@ -24,11 +26,16 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Fighters App',
-      initialRoute: '/',
-      home: MainScreen(),
-    );
+     return MultiProvider(
+        providers: [
+        ChangeNotifierProvider(create: (_) => FightersProvider()),
+    ],
+      child:
+        MaterialApp(
+        title: 'Fighters App',
+        initialRoute: '/',
+        home: MainScreen(),
+    ));
   }
 }
 

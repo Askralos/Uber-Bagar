@@ -51,8 +51,8 @@ class Fighter {
       pricing: json['pricing'] != null ? json['pricing'].toInt() : null,
       description: json['description'] ?? '',
       style: json['style'] ?? '',
-      longitude: json['Longitude']?.toDouble(),
-      latitude: json['Latitude']?.toDouble(),
+      longitude: json['longitude']?.toDouble(),
+      latitude: json['latitude']?.toDouble(),
       category: json['category'] ?? '',
     );
   }

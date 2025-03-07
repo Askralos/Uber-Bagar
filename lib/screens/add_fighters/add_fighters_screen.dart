@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import '../../models/fighter.dart';
-import '../../services/supabase_service.dart';
+import '../../providers/fighters_provider.dart';
 
 class AddFighterScreen extends StatefulWidget {
   @override
@@ -20,10 +20,14 @@ class _AddFighterScreenState extends State<AddFighterScreen> {
     image: '',
     sex: '',
     style: '',
-    pricing: 0, id: 0, wins: 0, fights: 0, rating: 0.0, longitude:  126.978, latitude: 37.5657,
+    pricing: 0,
+    id: null,
+    wins: 0,
+    fights: 0,
+    rating: 0.0,
+    longitude: 126.978,
+    latitude: 37.5657,
   );
-
-  final SupabaseService _supabaseService = SupabaseService();
 
   final List<String> _sexOptions = ['Homme', 'Femme'];
   final List<String> _categoryOptions = ['Poids Lourd', 'Poids Moyen', 'Poids Léger', 'Poids Plume'];
@@ -42,11 +46,17 @@ class _AddFighterScreenState extends State<AddFighterScreen> {
       _formKey.currentState!.save();
 
       try {
-        await _supabaseService.addFighter(_fighter);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Combattant ajouté avec succès')));
+        // Utilisation du provider au lieu du service Supabase directement
+        await Provider.of<FightersProvider>(context, listen: false).addFighter(_fighter);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Combattant ajouté avec succès'))
+        );
         Navigator.pop(context);
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Erreur: $e'))
+        );
       }
     }
   }
@@ -67,6 +77,9 @@ class _AddFighterScreenState extends State<AddFighterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Accès au provider pour vérifier l'état de chargement
+    final isLoading = Provider.of<FightersProvider>(context).isLoading;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Ajouter un combattant'),
@@ -76,8 +89,7 @@ class _AddFighterScreenState extends State<AddFighterScreen> {
         padding: EdgeInsets.all(16),
         child: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: ListView(
             children: [
               TextFormField(
                 controller: _firstNameController,
@@ -188,8 +200,14 @@ class _AddFighterScreenState extends State<AddFighterScreen> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _saveFighter,
-                child: Text('Ajouter le combattant'),
+                onPressed: isLoading ? null : _saveFighter,
+                child: isLoading
+                    ? SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2)
+                )
+                    : Text('Ajouter le combattant'),
               ),
             ],
           ),
