@@ -35,7 +35,6 @@ class Fighter {
     this.category = '',
   });
 
-  // Factory method de conversion depuis un JSON
   factory Fighter.fromJson(Map<String, dynamic> json) {
     return Fighter(
       id: json['id'],

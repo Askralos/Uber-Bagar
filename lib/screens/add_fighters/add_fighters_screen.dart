@@ -46,7 +46,6 @@ class _AddFighterScreenState extends State<AddFighterScreen> {
       _formKey.currentState!.save();
 
       try {
-        // Utilisation du provider au lieu du service Supabase directement
         await Provider.of<FightersProvider>(context, listen: false).addFighter(_fighter);
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -63,7 +62,6 @@ class _AddFighterScreenState extends State<AddFighterScreen> {
 
   @override
   void dispose() {
-    // Libère les contrôleurs quand l'écran est détruit
     _firstNameController.dispose();
     _lastNameController.dispose();
     _imageController.dispose();
@@ -77,7 +75,6 @@ class _AddFighterScreenState extends State<AddFighterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Accès au provider pour vérifier l'état de chargement
     final isLoading = Provider.of<FightersProvider>(context).isLoading;
 
     return Scaffold(

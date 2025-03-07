@@ -62,7 +62,6 @@ class _FightersScreenState extends State<FightersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Accès au provider
     final fightersProvider = Provider.of<FightersProvider>(context);
     final fighters = fightersProvider.fighters;
     final isLoading = fightersProvider.isLoading;
@@ -85,7 +84,7 @@ class _FightersScreenState extends State<FightersScreen> {
           // IconButton(
           //   icon: Icon(Icons.refresh),
           //   onPressed: () {
-          //     fightersProvider.fetchFighters();  // Utilisation du provider pour recharger
+          //     fightersProvider.fetchFighters();
           //   },
           // ),
         ],
@@ -105,7 +104,7 @@ class _FightersScreenState extends State<FightersScreen> {
                       label: Text(category),
                       selected: selectedCategory == category,
                       onSelected: (selected) {
-                        fightersProvider.setCategory(category);  // Utilisation du provider
+                        fightersProvider.setCategory(category);
                       },
                       selectedColor: Colors.red.shade100,
                       checkmarkColor: Colors.red,

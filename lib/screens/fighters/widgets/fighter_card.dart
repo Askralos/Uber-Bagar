@@ -60,7 +60,7 @@ class FighterCard extends StatelessWidget {
                         ),
                         _buildStatItem(
                           context,
-                          '${fighter.fights - fighter.wins}', // losses
+                          '${fighter.fights - fighter.wins}',
                           'D',
                           Colors.red,
                         ),
